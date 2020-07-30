@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import PageDefault from '../../../components/PageDefault';
 import { Link } from 'react-router-dom';
+import FormField from '../../../components/FormField';
 
 function CadastroCategoria() {
-  const [categorias, setCategorias] = useState(['teste']);
   const valoresIniciais = {
-    nome: 'teste',
-    descricao: 'teste desc',
-    Cor: '#000',
+    nome: '',
+    descricao: '',
+    cor: '',
   };
+
+  const [categorias, setCategorias] = useState([]);
   const [values, setValues] = useState(valoresIniciais);
 
   function setvalue(key, value) {
@@ -28,33 +30,34 @@ function CadastroCategoria() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          setCategorias([...categorias, nomeDaCategoria]);
+          setCategorias([...categorias, values]);
+
+          setValues(valoresIniciais);
         }}
       >
-        <div>
-          <label>
-            Nome da Categoria:
-            <input type="text" name="nome" value={values.nome} onChange={handleChange()} />
-          </label>
-        </div>
-        <div>
-          <label>
-            Descricão:
-            <textarea type="text" name="descricao" value={values.descricao} onChange={handleChange} />
-          </label>
-        </div>
-        <div>
-          <label>
-            Cor:
-            <input type="color" name="cor" value={values.Cor} onChange={handleChange} />
-          </label>
-        </div>
+        <FormField
+          value={values.nome}
+          onChange={handleChange}
+          name="nome"
+          type="text"
+          label="Nome da Categoria:"
+          inputTag="input"
+        />
+        <FormField
+          value={values.Descricao}
+          onChange={handleChange}
+          name="nome"
+          type="area"
+          label="Descricão:"
+          inputTag="textarea"
+        />
+        <FormField value={values.Cor} onChange={handleChange} name="nome" type="color" label="Cor:" inputTag="input" />
 
         <button>Cadastrar</button>
       </form>
       <ul>
         {categorias.map((categoria, indice) => {
-          return <li key={`${categoria}${indice}`}>{categoria}</li>;
+          return <li key={`${categoria}${indice}`}>{categoria.nome}</li>;
         })}
       </ul>
       <Link to="/">Ir para a home</Link>
