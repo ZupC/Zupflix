@@ -14,13 +14,11 @@ const Main = styled.main`
 
 function PageDefault({ children }) {
   return (
-    <>
+    <div>
       <Menu />
-        <Main>
-          {children}
-          </Main>
+      <Main>{children}</Main>
       <Footer />
-    </>
+    </div>
   );
 }
 
