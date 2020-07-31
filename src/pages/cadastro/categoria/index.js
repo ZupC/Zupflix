@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PageDefault from '../../../components/PageDefault';
 import FormField from '../../../components/FormField';
 import Button from '../../../components/Button';
+import useForm from '../../../hooks/useForm';
 
 function CadastroCategoria() {
   const valoresIniciais = {
@@ -11,40 +12,19 @@ function CadastroCategoria() {
     cor: '',
   };
 
-  const [categorias, setCategorias] = useState([]);
-  const [values, setValues] = useState(valoresIniciais);
+  const { handleChange, values, clearForm } = useForm(valoresIniciais);
 
-  function setvalue(key, value) {
-    setValues({
-      ...values,
-      [key]: value,
-    });
-  }
-  function handleChange(e) {
-    setvalue(e.target.getAttribute('name'), e.target.value);
-  }
+  const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
-    const URL = window.location.hostname.includes('localhost') ? 'http://localhost:3000' : 'https://familyflix.herokuapp.com/categorias';
-    fetch(URL).then(async (e) => {
-      const resposta = await e.json();
-      setCategorias([...resposta]);
-    });
-
-    // setTimeout(() => {
-    //   setCategorias([...categorias, {
-    //     id: 1,
-    //     nome: 'Front End',
-    //     descricao: 'Uma categoria bacanudassa',
-    //     cor: '#CBD1FF',
-    //   },
-    //   {
-    //     id: 2,
-    //     nome: 'Back End',
-    //     descricao: 'Outra categoria bacanudassa',
-    //     cor: '#CBD1FF',
-    //   }]);
-    // }, 4 * 1000);
+    const URL = window.location.hostname.includes('localhost')
+      ? 'http://localhost:8080/categorias'
+      : 'https://familyflix.herokuapp.com/categorias';
+    fetch(URL)
+      .then(async (e) => {
+        const resposta = await e.json();
+        setCategorias([...resposta]);
+      });
   }, []);
 
   return (
@@ -58,8 +38,7 @@ function CadastroCategoria() {
         onSubmit={(e) => {
           e.preventDefault();
           setCategorias([...categorias, values]);
-
-          setValues(valoresIniciais);
+          clearForm();
         }}
       >
         <FormField
@@ -68,17 +47,15 @@ function CadastroCategoria() {
           name="nome"
           type="text"
           label="Nome da Categoria:"
-          inputTag="input"
         />
         <FormField
           value={values.Descricao}
           onChange={handleChange}
-          name="nome"
+          name="Descricao"
           type="textarea"
           label="Descricão:"
-          inputTag="textarea"
         />
-        <FormField value={values.Cor} onChange={handleChange} name="nome" type="color" label="Cor:" inputTag="input" />
+        <FormField value={values.Cor} onChange={handleChange} name="Cor" type="color" label="Cor:" />
 
         <Button type="button">Cadastrar</Button>
       </form>
@@ -90,7 +67,7 @@ function CadastroCategoria() {
       )}
       <ul>
         {categorias.map((categoria) => (
-          <li key={`${categoria.nome}`}>{categoria.nome}</li>
+          <li key={`${categoria.titulo}`}>{categoria.titulo}</li>
         ))}
       </ul>
       <Link to="/">Ir para a home</Link>
